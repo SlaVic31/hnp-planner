@@ -1,0 +1,21 @@
+# Kontekst budowania zawiera wyłącznie kod źródłowy i manifesty.
+# Nigdy nie kopiujemy sekretów, danych, zależności ani artefaktów lokalnych.
+**
+!package.json
+!package-lock.json
+!tsconfig.base.json
+!tsconfig.json
+!tsconfig.web.json
+!scripts/
+!scripts/**
+!src/
+!src/**
+# Na wszelki wypadek (gdyby ktoś umieścił je w src/scripts):
+**/*.sqlite
+**/*.sqlite-*
+**/secrets.json
+**/config.json
+**/.env
+**/.env.*
+**/node_modules
+**/*.log
