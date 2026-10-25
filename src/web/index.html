@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HnP Planner — Outline + HacknPlan</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">◆</span>
+        <span>HnP Planner</span>
+      </div>
+      <label class="project-picker">
+        <span class="sr-only">Projekt</span>
+        <select id="project-select" aria-label="Projekt"></select>
+      </label>
+      <div id="mode-badges" class="badges" aria-live="polite"></div>
+    </header>
+    <div id="demo-banner" class="demo-banner" hidden>
+      <strong>TRYB DEMO</strong> — dane Outline i HacknPlan są fikcyjne, a odpowiedzi tworzy model regułowy (bez AI). Nic nie jest wysyłane do prawdziwych usług.
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="chat" aria-selected="true">Czat</button>
+      <button role="tab" data-tab="tasks">Zadania</button>
+      <button role="tab" data-tab="proposals">Propozycje <span id="pending-count" class="count" hidden></span></button>
+      <button role="tab" data-tab="history">Historia operacji</button>
+      <button role="tab" data-tab="settings">Ustawienia</button>
+    </nav>
+    <div id="global-error" class="alert alert-error" role="alert" hidden></div>
+    <main>
+      <section id="tab-chat" class="tab-panel chat-layout">
+        <aside class="conversations">
+          <button id="new-conversation" class="btn btn-secondary btn-block">+ Nowa rozmowa</button>
+          <ul id="conversation-list" class="conv-list"></ul>
+        </aside>
+        <div class="chat-main">
+          <div id="messages" class="messages" aria-live="polite"></div>
+          <form id="chat-form" class="chat-form">
+            <textarea id="chat-input" rows="3" maxlength="4000" placeholder="Zapytaj o dokumentację lub poproś o zaplanowanie zadań, np. „Dodaj zadanie na ostrzeżenie o niskim poziomie oleju”"></textarea>
+            <div class="chat-actions">
+              <span id="chat-privacy" class="muted small"></span>
+              <button id="chat-send" class="btn btn-primary" type="submit">Wyślij</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="tab-tasks" class="tab-panel" hidden>
+        <div class="toolbar">
+          <input id="task-search" type="search" placeholder="Szukaj zadań…" aria-label="Szukaj zadań" />
+          <button id="task-refresh" class="btn btn-secondary">Odśwież</button>
+          <span id="task-count" class="muted"></span>
+        </div>
+        <div id="tasks-container"></div>
+      </section>
+
+      <section id="tab-proposals" class="tab-panel" hidden>
+        <div class="toolbar">
+          <label>Status
+            <select id="proposal-filter">
+              <option value="">wszystkie</option>
+              <option value="pending">oczekujące</option>
+              <option value="succeeded">wykonane</option>
+              <option value="failed">nieudane</option>
+              <option value="outcome_unknown">wynik nieznany</option>
+              <option value="stale">nieaktualne</option>
+              <option value="rejected">odrzucone</option>
+            </select>
+          </label>
+          <button id="proposal-refresh" class="btn btn-secondary">Odśwież</button>
+        </div>
+        <div id="proposals-container" class="proposal-list"></div>
+      </section>
+
+      <section id="tab-history" class="tab-panel" hidden>
+        <div class="toolbar">
+          <button id="history-refresh" class="btn btn-secondary">Odśwież</button>
+          <span class="muted small">Historia jest zapisana lokalnie w SQLite.</span>
+        </div>
+        <div id="history-container"></div>
+      </section>
+
+      <section id="tab-settings" class="tab-panel" hidden>
+        <div id="settings-container"></div>
+      </section>
+    </main>
+  </body>
+</html>

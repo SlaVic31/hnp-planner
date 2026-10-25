@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+*.sqlite
+*.sqlite-*
+secrets.json
+.hnp-planner/
+.env
+.env.*

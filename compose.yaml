@@ -1,0 +1,47 @@
+# HnP Planner w Dockerze — wyłącznie lokalnie.
+#   docker compose up -d --build        # start
+#   docker compose down                 # zatrzymanie; dane w wolumenie ZOSTAJĄ
+#   (NIE używaj „down -v” — usuwa wolumen z bazą, konfiguracją i sekretami)
+#
+# Zmienne (opcjonalnie, np. w powłoce):
+#   HNP_HOST_PORT    port na hoście (domyślnie 4317), publikowany tylko na 127.0.0.1
+#   HNP_VOLUME_NAME  nazwa wolumenu danych (domyślnie hnp-planner-data)
+#   HNP_DEMO=1       tryb demo (fikcyjne dane, bez wywołań zewnętrznych)
+name: ${HNP_COMPOSE_PROJECT:-hnp-planner}
+
+services:
+  app:
+    build:
+      context: .
+    image: hnp-planner:local
+    restart: unless-stopped
+    ports:
+      # Tylko pętla zwrotna hosta — aplikacja nie jest dostępna z sieci LAN.
+      - "127.0.0.1:${HNP_HOST_PORT:-4317}:4317"
+    environment:
+      HNP_PORT: "4317"
+      # Jawna konfiguracja kontenera: nasłuch na wszystkich interfejsach WEWNĄTRZ kontenera,
+      # konieczny, by opublikowany port działał. Poza Dockerem domyślnie zawsze 127.0.0.1.
+      HNP_BIND_HOST: "0.0.0.0"
+      # Przeglądarka widzi aplikację pod portem hosta — te źródła przechodzą kontrolę Host/Origin/CSRF.
+      HNP_PUBLIC_ORIGINS: "http://127.0.0.1:${HNP_HOST_PORT:-4317},http://localhost:${HNP_HOST_PORT:-4317}"
+      HNP_DEMO: "${HNP_DEMO:-0}"
+    volumes:
+      # Cały katalog danych: config.json, secrets.json, data.sqlite (+ -wal, -shm).
+      - hnp-data:/data
+    extra_hosts:
+      # Dostęp do modelu działającego na hoście (np. Ollama) pod http://host.docker.internal:11434/v1.
+      # Docker Desktop zapewnia tę nazwę sam; na Linuksie mapuje ją ten wpis.
+      - "host.docker.internal:host-gateway"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - "no-new-privileges:true"
+    stop_grace_period: 15s
+
+volumes:
+  hnp-data:
+    name: ${HNP_VOLUME_NAME:-hnp-planner-data}

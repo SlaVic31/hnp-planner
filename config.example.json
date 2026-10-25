@@ -1,0 +1,45 @@
+{
+  "port": 4317,
+  "outline": {
+    "mode": "mcp",
+    "mcpUrl": "https://twoj-zespol.getoutline.com/mcp",
+    "timeoutMs": 20000,
+    "maxDocuments": 4,
+    "maxCharsPerDocument": 6000
+  },
+  "hacknplan": {
+    "mode": "api",
+    "baseUrl": "https://api.hacknplan.com/v0",
+    "webUrlTemplate": "https://app.hacknplan.com/p/{projectId}/kanban?taskId={workItemId}",
+    "timeoutMs": 20000,
+    "maxTasksInContext": 60
+  },
+  "llm": {
+    "mode": "openai",
+    "baseUrl": "http://127.0.0.1:11434/v1",
+    "model": "llama3.1:8b",
+    "jsonMode": true,
+    "temperature": 0.2,
+    "timeoutMs": 120000,
+    "openaiResponses": {
+      "baseUrl": "https://api.openai.com/v1",
+      "model": "gpt-6-astra"
+    },
+    "anthropic": {
+      "baseUrl": "https://api.anthropic.com",
+      "model": "claude-opus-5-5",
+      "effort": "low"
+    }
+  },
+  "projects": [
+    {
+      "id": "moja-gra",
+      "name": "Moja gra",
+      "hacknplanProjectId": 123456,
+      "outlineCollectionIds": [
+        "00000000-0000-0000-0000-000000000000"
+      ],
+      "descriptionTemplate": "{{summary}}\n{{#acceptance_criteria}}\n\n## Kryteria akceptacji\n{{acceptance_criteria}}\n{{/acceptance_criteria}}\n{{#technical_notes}}\n\n## Uwagi techniczne\n{{technical_notes}}\n{{/technical_notes}}\n{{#sources}}\n\n## Źródła\n{{sources}}\n{{/sources}}\n\n_Przygotowano {{date}} w projekcie {{project}}._"
+    }
+  ]
+}
